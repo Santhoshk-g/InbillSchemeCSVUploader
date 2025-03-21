@@ -1,0 +1,67 @@
+<template>
+    <lightning-card icon-name="custom:custom14" title='In Bill Schemes Details Upload'>
+
+    <div class="slds-clearfix" style="margin-right: 3%">
+        <div class="slds-float_right">
+    <lightning-button-group>
+        <lightning-button variant="brand-outline"
+                          label="Add Detials"
+                          icon-name="utility:add"
+                          onclick={NavigateToNewInBillScheme}></lightning-button>
+        <template if:true={datatable}>                  
+        <lightning-button label="ExportToExcel"
+                          variant="brand-outline" 
+                          title="Export As CSV File"
+                          icon-name="utility:logout" 
+                          onclick={exportData}></lightning-button>
+                           </template>
+    </lightning-button-group>
+    </div></div>
+        <div style="margin-left: 3%">
+            <lightning-file-upload accept={acceptedCSVFormats} 
+                                   label="Upload file as .csv format" 
+                                   multiple="multiple" 
+                                   onuploadfinished={uploadFileHandler} 
+                                   record-id={recordId}></lightning-file-upload>
+        
+             <a href={templatefile}> Download Template</a>
+             <br/> 
+             <div if:true={error} class="slds-text-color_destructive">
+                <b>{PriceError}</b>
+            </div><br/>
+        </div>
+
+          <div if:true={datatable}>                
+        <div class="slds-float_right" style="margin-right: 3%">
+             <span  class="slds-badge"><b>Total Records : {size}</b></span>
+        </div><br/>
+                      
+        <lightning-input  type="search"
+                          label="Search"
+                          onchange={handlesearch}
+                          placeholder="Search by Customer Name or Code" ></lightning-input>
+         </div>
+        <template if:true={loaded}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+
+        <div if:true={datatable}>
+            <lightning-datatable
+                          key-field="Name"
+                          data={recordsToDisplay}
+                          columns={columns}
+                          onrowaction={handleRowAction}
+                          enable-infinite-loading
+                          onloadmore={loadMoreData}
+                          show-row-number-column
+                          hide-checkbox-column></lightning-datatable>
+        
+      <div class="slds-align_absolute-center" style="height:5rem">
+           <lightning-button disabled={bDisableFirst} icon-name="utility:left" variant="brand-outline" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+                &nbsp;&nbsp;
+                <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Pages</span>
+                
+                <lightning-button disabled={bDisableLast} icon-name="utility:right" variant="brand-outline" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+      </div></div>
+    </lightning-card>
+</template>
